@@ -14,9 +14,9 @@ async function Music() {
         return dateB - dateA;
     });
 
-    function highlightText(text, searchTerm) {
-        if (!searchTerm) return text;
-        const special = searchTerm.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    function highlightText(text, sptxt) {
+        if (!sptxt) return text;
+        const special = sptxt.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
         const regex = new RegExp(`(${special})`, 'g');
         return text.replace(regex, '<mark>$1</mark>');
     }
@@ -61,14 +61,22 @@ async function Music() {
     $searchButton.addEventListener('click', () => {
         const searchTerm = $searchInput.value;
         const filteredData = data.filter(item => item.artist.includes(searchTerm) || item.albumName.includes(searchTerm));
-        contents.innerHTML = filteredData.map(album => createAlbumHTML(album, searchTerm)).join('');
+        if(filteredData.length === 0){
+            contents.innerHTML = `<p style="text-align:center; font-size:20px;">검색된 앨범이 없습니다.</p>`;
+        } else {
+            contents.innerHTML = filteredData.map(album => createAlbumHTML(album, searchTerm)).join('');
+        }
     });
 
     $searchInput.addEventListener('keydown', (k) => {
         if(k.key === 'Enter') {
             const searchTerm = $searchInput.value;
             const filteredData = data.filter(item => item.artist.includes(searchTerm) || item.albumName.includes(searchTerm));
-            contents.innerHTML = filteredData.map(album => createAlbumHTML(album, searchTerm)).join('');
+            if(filteredData.length === 0) {
+                contents.innerHTML = `<p style="text-align:center; font-size:20px;">검색된 앨범이 없습니다.</p>`;
+            }else{
+                contents.innerHTML = filteredData.map(album => createAlbumHTML(album, searchTerm)).join('');
+            }
         }
     });
 
@@ -98,12 +106,17 @@ async function Music() {
             
             if (selectedCategory === 'ALL') {
                 contents.innerHTML = data.map(album => createAlbumHTML(album)).join('');
-            } else {
+            }
+            else {
                 const filteredData = data.filter(item => item.category === selectedCategory);
                 contents.innerHTML = filteredData.map(album => createAlbumHTML(album)).join('');
             }
         });
     });
+}
+
+function shoppingcart(){
+    
 }
 
 Music();
